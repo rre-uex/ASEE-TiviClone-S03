@@ -47,15 +47,28 @@ class HomeActivity : AppCompatActivity() {
         libraryFragment = LibraryFragment()
         userFragment = UserFragment()
 
-        //TODO set discoverFragment as default fragment
-
+        setCurrentFragment(discoverFragment)
     }
 
     fun setUpListeners() {
-        //TODO set listeners for bottom navigation bar
+        //nothing to do
+        with(binding){
+            bottomNavigation.setOnItemSelectedListener {
+                when(it.itemId){
+                    R.id.action_discover -> setCurrentFragment(discoverFragment)
+                    R.id.action_library -> setCurrentFragment(libraryFragment)
+                    R.id.action_user -> setCurrentFragment(userFragment)
+                    else -> setCurrentFragment(discoverFragment)
+                }
+                true
+            }
+        }
     }
 
-    private fun setCurrentFragment(fragment: Fragment): Nothing = TODO()
-
+    private fun setCurrentFragment(fragment: Fragment) =
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, fragment)
+            commit()
+        }
 
 }
