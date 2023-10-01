@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 
 import es.unex.giiis.asee.tiviclone.R
 import es.unex.giiis.asee.tiviclone.databinding.ActivityHomeBinding
@@ -12,10 +13,6 @@ import es.unex.giiis.asee.tiviclone.model.User
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
-
-    private lateinit var discoverFragment: DiscoverFragment
-    private lateinit var libraryFragment: LibraryFragment
-    private lateinit var userFragment: UserFragment
 
     companion object {
         const val USER_INFO = "USER_INFO"
@@ -43,32 +40,15 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun setUpUI(user: User) {
-        discoverFragment = DiscoverFragment()
-        libraryFragment = LibraryFragment()
-        userFragment = UserFragment()
-
-        setCurrentFragment(discoverFragment)
+        with(binding) {
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
+        }
     }
 
     fun setUpListeners() {
         //nothing to do
-        with(binding){
-            bottomNavigation.setOnItemSelectedListener {
-                when(it.itemId){
-                    R.id.action_discover -> setCurrentFragment(discoverFragment)
-                    R.id.action_library -> setCurrentFragment(libraryFragment)
-                    R.id.action_user -> setCurrentFragment(userFragment)
-                    else -> setCurrentFragment(discoverFragment)
-                }
-                true
-            }
-        }
     }
-
-    private fun setCurrentFragment(fragment: Fragment) =
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container, fragment)
-            commit()
-        }
 
 }
